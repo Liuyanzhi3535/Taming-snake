@@ -1,26 +1,39 @@
-const path = require("path");
+const path = require('path');
 
 module.exports = {
-  mode: "development",
-  entry: "./src/index.ts",
-  devtool: "inline-source-map",
+  context: path.resolve(__dirname, 'src'),
+  mode: 'development',
+  entry: './main.ts',
+  devtool: 'cheap-module-source-map',
   devServer: {
-    contentBase: "./dist",
+    contentBase: "./src",
   },
   module: {
     rules: [
       {
-        test: /\.ts?$/,
-        use: "ts-loader",
+        enforce: 'pre',
+        test: /\.js$/,
+        use: 'source-map-loader',
+      },
+      {
+        enforce: 'pre',
+        test: /\.ts$/,
+        use: 'tslint-loader',
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.ts$/,
+        loader: 'ts-loader',
         exclude: /node_modules/,
       },
     ],
   },
   resolve: {
-    extensions: [".ts", ".js"],
+    extensions: ['.ts', '.js'],
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
   },
   output: {
-    filename: "bundle.js",
-    path: path.resolve(__dirname, "dist"),
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'dist'),
   },
 };
