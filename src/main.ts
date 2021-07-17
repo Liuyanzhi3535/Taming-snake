@@ -51,7 +51,7 @@ let ctx = canvas.getContext('2d');
 document.body.appendChild(canvas);
 
 // 按鈕事件
-const keydown$ = fromEvent(document, 'keydown');
+const keydown$ = fromEvent(document, 'keydown') as Observable<KeyboardEvent>;
 const reset$ = keydown$.pipe(
   filter((e: KeyboardEvent) => e.key === 'r'),
   mapTo('RESET')
@@ -66,7 +66,7 @@ const pause$ = keydown$.pipe(
 );
 const directions$: Observable<Point2D> = keydown$.pipe(
   throttleTime(SNAKE_SPEED * 0.8),
-  map((e: KeyboardEvent) => {
+  map((e) => {
     return DIRECTION_MAP.get(e.key);
   }),
   filter((v) => !!v),
@@ -161,7 +161,7 @@ function craeteGameRround(ticker$: Observable<number>): Observable<[number, Poin
 }
 
 const game$ = of('satrt game').pipe(
-  map((_) => ticker$),
+  map((_: string) => ticker$),
   switchMap(craeteGameRround),
   takeWhile(([interval, snake, apples, score]) => !isGameOver(snake) && interval !== 0)
 );
